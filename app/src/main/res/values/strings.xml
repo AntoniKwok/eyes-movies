@@ -12,4 +12,7 @@
     <string name="subtitle_popularity">Sorted By : Popularity</string>
     <string name="subtitle_top_rated">Sorted By : Top Rated</string>
     <string name="subtitle_favourite">Your Favourites</string>
+
+    <!-- MovieDetailActivity -->
+    <string name="movie_detail_title">Movie Detail</string>
 </resources>

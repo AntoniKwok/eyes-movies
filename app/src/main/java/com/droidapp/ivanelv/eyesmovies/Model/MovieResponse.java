@@ -1,5 +1,8 @@
 package com.droidapp.ivanelv.eyesmovies.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.List;
  * Created by if on 22/08/17.
  */
 
-public class MovieResponse
+public class MovieResponse implements Parcelable
 {
     @SerializedName("page")
     private int page;
@@ -61,4 +64,47 @@ public class MovieResponse
     {
         this.totalPages = totalPages;
     }
+
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(this.page);
+        dest.writeInt(this.totalResults);
+        dest.writeInt(this.totalPages);
+        dest.writeTypedList(this.results);
+    }
+
+    public MovieResponse()
+    {
+    }
+
+    protected MovieResponse(Parcel in)
+    {
+        this.page = in.readInt();
+        this.totalResults = in.readInt();
+        this.totalPages = in.readInt();
+        this.results = in.createTypedArrayList(Movie.CREATOR);
+    }
+
+    public static final Creator<MovieResponse> CREATOR = new Creator<MovieResponse>()
+    {
+        @Override
+        public MovieResponse createFromParcel(Parcel source)
+        {
+            return new MovieResponse(source);
+        }
+
+        @Override
+        public MovieResponse[] newArray(int size)
+        {
+            return new MovieResponse[size];
+        }
+    };
 }

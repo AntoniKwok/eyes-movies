@@ -1,6 +1,7 @@
 package com.droidapp.ivanelv.eyesmovies.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.droidapp.ivanelv.eyesmovies.Model.Movie;
+import com.droidapp.ivanelv.eyesmovies.MovieDetailActivity;
 import com.droidapp.ivanelv.eyesmovies.R;
 import com.squareup.picasso.Picasso;
 
@@ -61,18 +62,6 @@ public class MainAdapter extends BaseAdapter
                     .inflate(R.layout.content_movie, parent, false);
         }
 
-        // Set Up Movie Clicked
-        final ConstraintLayout rootView = (ConstraintLayout) convertView;
-        rootView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // Go To Movie Detail Activity
-                Toast.makeText(mContext, ((TextView) rootView.findViewById(R.id.tv_movie_title)).getText().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
         // Set Up The Movie Image
         final ImageView ivMovie = (ImageView) convertView.findViewById(R.id.iv_movie);
 
@@ -98,6 +87,22 @@ public class MainAdapter extends BaseAdapter
         TextView tvRate = (TextView) convertView.findViewById(R.id.tv_movie_rate);
         String formattedRating = decimalFormat.format(movies.get(position).getVote_average());
         tvRate.setText(formattedRating);
+
+        // Set Up Movie Clicked
+        final ConstraintLayout rootView = (ConstraintLayout) convertView;
+        rootView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // Initialize Intent
+                Intent intent = new Intent(mContext, MovieDetailActivity.class);
+                intent.putExtra("MOVIE_DATA", movies.get(position));
+
+                // Go To Movie Detail Activity
+                mContext.startActivity(intent);
+            }
+        });
 
         return convertView;
     }

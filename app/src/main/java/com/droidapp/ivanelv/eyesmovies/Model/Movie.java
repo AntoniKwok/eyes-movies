@@ -1,14 +1,18 @@
 package com.droidapp.ivanelv.eyesmovies.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by if on 22/08/17.
  */
 
-public class Movie
+public class Movie implements Parcelable
 {
     @SerializedName("vote_count")
     int vote_count;
@@ -209,4 +213,63 @@ public class Movie
     {
         this.genre_ids = genre_ids;
     }
+    
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(this.vote_count);
+        dest.writeInt(this.id);
+        dest.writeFloat(this.vote_average);
+        dest.writeFloat(this.popularity);
+        dest.writeByte(this.video ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.adult ? (byte) 1 : (byte) 0);
+        dest.writeString(this.title);
+        dest.writeString(this.poster_path);
+        dest.writeString(this.original_language);
+        dest.writeString(this.original_title);
+        dest.writeString(this.backdrop_path);
+        dest.writeString(this.overview);
+        dest.writeString(this.release_date);
+        dest.writeList(this.genre_ids);
+    }
+
+    protected Movie(Parcel in)
+    {
+        this.vote_count = in.readInt();
+        this.id = in.readInt();
+        this.vote_average = in.readFloat();
+        this.popularity = in.readFloat();
+        this.video = in.readByte() != 0;
+        this.adult = in.readByte() != 0;
+        this.title = in.readString();
+        this.poster_path = in.readString();
+        this.original_language = in.readString();
+        this.original_title = in.readString();
+        this.backdrop_path = in.readString();
+        this.overview = in.readString();
+        this.release_date = in.readString();
+        this.genre_ids = new ArrayList<Integer>();
+        in.readList(this.genre_ids, Integer.class.getClassLoader());
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>()
+    {
+        @Override
+        public Movie createFromParcel(Parcel source)
+        {
+            return new Movie(source);
+        }
+
+        @Override
+        public Movie[] newArray(int size)
+        {
+            return new Movie[size];
+        }
+    };
 }

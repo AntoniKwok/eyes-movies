@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,6 +34,10 @@ public class MainActivity extends AppCompatActivity
 
     private GridView gridView;
 
+    private Parcelable parcelableData;
+
+    private NetworkChangeReceiver networkChangeReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -44,19 +49,27 @@ public class MainActivity extends AppCompatActivity
         this.setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.app_name));
 
+        // Initialize Connectivity Manager
+        networkChangeReceiver = new NetworkChangeReceiver();
+
+        // Initialize GridView
+        gridView = (GridView) findViewById(R.id.grid_view);
+
+        if (savedInstanceState != null)
+        {
+            // Now, Parcelable Data Should Be Save The Offline Data
+            parcelableData = savedInstanceState.getParcelable("MOVIE_LIST_DATA");
+
+            MovieResponse movieResponse = savedInstanceState.getParcelable("MOVIE_LIST_DATA");
+            List<Movie> movieList = movieResponse.getResults();
+            gridView.setAdapter(new MainAdapter(MainActivity.this, movieList));
+
+            changeSortBy(savedInstanceState.getString("SORT_BY"));
+            return;
+        }
 
         // Change ActionBar Subtitle Sorted By Status
         changeSortBy(getString(R.string.subtitle_popularity));
-
-        // Connectivity Manager
-        NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        intentFilter.addAction(Intent.ACTION_MANAGE_NETWORK_USAGE);
-        this.registerReceiver(networkChangeReceiver, intentFilter);
-
-        /* TODO (2) Create Pull Down To Refresh */
-
-        gridView = (GridView) findViewById(R.id.grid_view);
 
         getPopularMovies();
     }
@@ -71,8 +84,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response)
             {
-                List<Movie> listMovies = response.body().getResults();
+                parcelableData = response.body();
 
+                List<Movie> listMovies = response.body().getResults();
                 gridView.setAdapter(new MainAdapter(MainActivity.this, listMovies));
             }
 
@@ -94,8 +108,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response)
             {
-                List<Movie> listMovies = response.body().getResults();
+                parcelableData = response.body();
 
+                List<Movie> listMovies = response.body().getResults();
                 gridView.setAdapter(new MainAdapter(MainActivity.this, listMovies));
             }
 
@@ -113,6 +128,24 @@ public class MainActivity extends AppCompatActivity
         {
             getSupportActionBar().setSubtitle(sortBy);
         }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        intentFilter.addAction(Intent.ACTION_MANAGE_NETWORK_USAGE);
+        this.registerReceiver(networkChangeReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        unregisterReceiver(networkChangeReceiver);
     }
 
     @Override
@@ -148,6 +181,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
+        if (parcelableData != null)
+        {
+            outState.putParcelable("MOVIE_LIST_DATA", parcelableData);
+            outState.putString("SORT_BY", getSupportActionBar().getSubtitle().toString());
+        }
         super.onSaveInstanceState(outState);
     }
 }
