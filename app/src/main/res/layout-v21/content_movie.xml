@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:elevation="5dp"
+    android:clickable="true">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/wrapper_detail"
+        android:layout_width="150dp"
+        android:layout_height="85dp"
+        android:background="#FEFEFE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
+        <TextView
+            android:id="@+id/tv_movie_title"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:gravity="start|center"
+            android:maxLines="2"
+            android:text="Test"
+            android:textColor="#313131"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_movie_popularity"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_movie_popularity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:drawableLeft="@drawable/ic_star_color_14dp"
+            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/ic_star_color_14dp"
+            android:gravity="center_vertical"
+            android:text="150"
+            android:textColor="#313131"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_movie_title"/>
+
+        <TextView
+            android:id="@+id/tv_movie_rate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="2"
+            android:textColor="#313131"
+            android:textSize="14sp"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@drawable/ic_thumb_up_color_14dp"
+            android:drawableStart="@drawable/ic_thumb_up_color_14dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="@id/tv_movie_title"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="#DEDEDE"
+            app:layout_constraintBottom_toTopOf="@id/tv_movie_popularity"
+            app:layout_constraintLeft_toLeftOf="@id/tv_movie_title"
+            app:layout_constraintRight_toRightOf="@id/tv_movie_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_title"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="81dp"/>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_movie"
+        android:layout_width="150dp"
+        android:layout_height="170dp"
+        android:contentDescription=""
+        android:scaleType="centerCrop"
+        android:src="@drawable/iv_placeholder"
+        app:layout_constraintBottom_toTopOf="@+id/wrapper_detail"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

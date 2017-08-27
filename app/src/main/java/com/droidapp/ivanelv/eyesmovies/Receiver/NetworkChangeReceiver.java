@@ -37,7 +37,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver
                 {
                     connectivityStateWrapper.setVisibility(View.INVISIBLE);
 
-                    ((MainActivity) context).getTopRatedMovies();
+                    ((MainActivity) context).getPopularMovies();
                 }
                 else
                 {

@@ -7,4 +7,9 @@
     <string name="popular">Popular</string>
     <string name="top_rated">Top Rated</string>
     <string name="my_favourites">My Favourites</string>
+
+    <!-- MainActivity Subtitle -->
+    <string name="subtitle_popularity">Sorted By : Popularity</string>
+    <string name="subtitle_top_rated">Sorted By : Top Rated</string>
+    <string name="subtitle_favourite">Your Favourites</string>
 </resources>

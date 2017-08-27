@@ -8,6 +8,10 @@
     android:background="@color/colorPrimary200"
     tools:context="com.droidapp.ivanelv.eyesmovies.MainActivity">
 
+    <include
+        android:id="@+id/included_toolbar_main"
+        layout="@layout/toolbar_main"/>
+
     <GridView
         android:id="@+id/grid_view"
         android:layout_width="0dp"
@@ -22,7 +26,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/included_toolbar_main"/>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/tv_internet_state_wrapper"
