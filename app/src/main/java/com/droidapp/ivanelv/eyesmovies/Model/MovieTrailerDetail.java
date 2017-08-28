@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 public class MovieTrailerDetail implements Parcelable
 {
     @SerializedName("id")
-    private int id;
+    private String id;
 
     @SerializedName("iso_639_1")
     private String iso_1;
@@ -35,12 +35,12 @@ public class MovieTrailerDetail implements Parcelable
     @SerializedName("type")
     private String type;
 
-    public int getId()
+    public String getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setId(String id)
     {
         this.id = id;
     }
@@ -125,7 +125,7 @@ public class MovieTrailerDetail implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeInt(this.id);
+        dest.writeString(this.id);
         dest.writeString(this.iso_1);
         dest.writeString(this.iso_2);
         dest.writeString(this.key);
@@ -141,7 +141,7 @@ public class MovieTrailerDetail implements Parcelable
 
     protected MovieTrailerDetail(Parcel in)
     {
-        this.id = in.readInt();
+        this.id = in.readString();
         this.iso_1 = in.readString();
         this.iso_2 = in.readString();
         this.key = in.readString();

@@ -3,14 +3,32 @@ package com.droidapp.ivanelv.eyesmovies;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.droidapp.ivanelv.eyesmovies.API.ApiClient;
+import com.droidapp.ivanelv.eyesmovies.API.ApiConfig;
+import com.droidapp.ivanelv.eyesmovies.API.IEndpoint;
+import com.droidapp.ivanelv.eyesmovies.Adapter.MovieReviewAdapter;
+import com.droidapp.ivanelv.eyesmovies.Adapter.MovieTrailerAdapter;
 import com.droidapp.ivanelv.eyesmovies.Model.Movie;
+import com.droidapp.ivanelv.eyesmovies.Model.MovieReview;
+import com.droidapp.ivanelv.eyesmovies.Model.MovieReviewDetail;
+import com.droidapp.ivanelv.eyesmovies.Model.MovieTrailer;
+import com.droidapp.ivanelv.eyesmovies.Model.MovieTrailerDetail;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.droidapp.ivanelv.eyesmovies.API.Contract.PATH_IMAGE_MOBILE_SIZE;
 
@@ -28,6 +46,10 @@ public class MovieDetailActivity extends AppCompatActivity
                 tvSynopsisContent;
 
     private RecyclerView rvTrailer, rvReview;
+
+    private MovieTrailerAdapter tAdapter;
+
+    private MovieReviewAdapter rAdapter;
 
     private FloatingActionButton fab;
 
@@ -88,14 +110,62 @@ public class MovieDetailActivity extends AppCompatActivity
 
         // Set Up Movie Trailer
         rvTrailer = (RecyclerView) findViewById(R.id.rv_trailer);
-
-        // Set Up rvTrailer Adapter
-
+        rvTrailer.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        getMovieTrailer(movieData.getId());
 
         // Set Up Review
         rvReview = (RecyclerView) findViewById(R.id.rv_content_review);
+    }
 
-        // Set Up rvReview Adapter
+    public void getMovieTrailer(int id)
+    {
+        IEndpoint apiService = ApiClient.getClient().create(IEndpoint.class);
+
+        Call<MovieTrailer> call = apiService.getMovieTrailer(id, ApiConfig.MyAPIKey);
+        call.enqueue(new Callback<MovieTrailer>()
+        {
+            @Override
+            public void onResponse(Call<MovieTrailer> call, Response<MovieTrailer> response)
+            {
+                List<MovieTrailerDetail> trailerList = response.body().getResults();
+
+                Log.w("TESTETEST", trailerList.toString());
+
+                tAdapter = new MovieTrailerAdapter(MovieDetailActivity.this, trailerList);
+                rvTrailer.setAdapter(tAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<MovieTrailer> call, Throwable t)
+            {
+                Log.e("ERROR__", t.toString());
+            }
+        });
+    }
+
+    /* TODO Not Done Yet */
+    public void getMovieReview(int id)
+    {
+        IEndpoint apiService = ApiClient.getClient().create(IEndpoint.class);
+
+        Call<MovieReview> call = apiService.getMovieReview(id, ApiConfig.MyAPIKey);
+        call.enqueue(new Callback<MovieReview>()
+        {
+            @Override
+            public void onResponse(Call<MovieReview> call, Response<MovieReview> response)
+            {
+                List<MovieReviewDetail> reviewList = response.body().getResults();
+
+                rAdapter = new MovieReviewAdapter();
+                rvTrailer.setAdapter(tAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<MovieReview> call, Throwable t)
+            {
+
+            }
+        });
     }
 
     @Override
@@ -107,5 +177,12 @@ public class MovieDetailActivity extends AppCompatActivity
         }
 
         super.onSaveInstanceState(outState);
+    }
+
+    public void openTrailer(View v)
+    {
+        TextView tvSiteLink = (TextView) v.findViewById(R.id.tv_site_link);
+
+        Toast.makeText(this, tvSiteLink.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 }

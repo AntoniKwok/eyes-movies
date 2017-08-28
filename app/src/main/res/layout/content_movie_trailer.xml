@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginEnd="16dp"
+    android:background="@color/colorPrimaryDark"
+    android:onClick="openTrailer"
+    tools:context=".MovieDetailActivity">
+
+    <ImageView
+        android:id="@+id/iv_trailer"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:contentDescription=""
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+
+    <TextView
+        android:id="@+id/tv_trailer_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:text="1"
+        android:textColor="#FFFFFF"/>
+
+    <TextView
+        android:id="@+id/tv_site_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+</FrameLayout>
