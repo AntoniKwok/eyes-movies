@@ -11,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.droidapp.ivanelv.eyesmovies.Model.LocalMovie;
+import com.droidapp.ivanelv.eyesmovies.Model.Movie;
 import com.droidapp.ivanelv.eyesmovies.MovieDetailActivity;
 import com.droidapp.ivanelv.eyesmovies.R;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.droidapp.ivanelv.eyesmovies.API.Contract.PATH_IMAGE_MOBILE_SIZE;
@@ -97,7 +99,25 @@ public class MainFavouriteAdapter extends BaseAdapter
             {
                 // Initialize Intent
                 Intent intent = new Intent(mContext, MovieDetailActivity.class);
-                intent.putExtra("MOVIE_DATA", movies.get(position));
+
+                Movie movie = new Movie(
+                        movies.get(position).getVote_count(),
+                        movies.get(position).getMovie_id(),
+                        movies.get(position).getVote_average(),
+                        movies.get(position).getPopularity(),
+                        movies.get(position).isVideo(),
+                        movies.get(position).isAdult(),
+                        movies.get(position).getTitle(),
+                        movies.get(position).getPoster_path(),
+                        movies.get(position).getOriginal_language(),
+                        movies.get(position).getOriginal_title(),
+                        movies.get(position).getBackdrop_path(),
+                        movies.get(position).getOverview(),
+                        movies.get(position).getRelease_date(),
+                        new ArrayList<Integer>()
+                );
+
+                intent.putExtra("MOVIE_DATA", movie);
 
                 // Go To Movie Detail Activity
                 mContext.startActivity(intent);

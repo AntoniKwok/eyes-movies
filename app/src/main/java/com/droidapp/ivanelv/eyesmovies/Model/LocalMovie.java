@@ -10,12 +10,14 @@ import com.orm.SugarRecord;
  */
 
 public class LocalMovie
-        extends SugarRecord<LocalMovie>
-        implements Parcelable
+    extends SugarRecord
+    implements Parcelable
 {
     int vote_count;
 
     Long id;
+
+    int movie_id;
 
     float vote_average;
 
@@ -39,10 +41,15 @@ public class LocalMovie
 
     String release_date;
 
-    public LocalMovie(int vote_count, Long id, float vote_average, float popularity, boolean video, boolean adult, String title, String poster_path, String original_language, String original_title, String backdrop_path, String overview, String release_date)
+    public LocalMovie()
+    {
+    }
+
+    public LocalMovie(int vote_count, Long id, int movie_id, float vote_average, float popularity, boolean video, boolean adult, String title, String poster_path, String original_language, String original_title, String backdrop_path, String overview, String release_date)
     {
         this.vote_count = vote_count;
         this.id = id;
+        this.movie_id = movie_id;
         this.vote_average = vote_average;
         this.popularity = popularity;
         this.video = video;
@@ -76,6 +83,16 @@ public class LocalMovie
     public void setId(Long id)
     {
         this.id = id;
+    }
+
+    public int getMovie_id()
+    {
+        return movie_id;
+    }
+
+    public void setMovie_id(int movie_id)
+    {
+        this.movie_id = movie_id;
     }
 
     public float getVote_average()
@@ -188,6 +205,10 @@ public class LocalMovie
         this.release_date = release_date;
     }
 
+    public static Creator<LocalMovie> getCREATOR()
+    {
+        return CREATOR;
+    }
 
     @Override
     public int describeContents()
@@ -200,6 +221,7 @@ public class LocalMovie
     {
         dest.writeInt(this.vote_count);
         dest.writeValue(this.id);
+        dest.writeInt(this.movie_id);
         dest.writeFloat(this.vote_average);
         dest.writeFloat(this.popularity);
         dest.writeByte(this.video ? (byte) 1 : (byte) 0);
@@ -217,6 +239,7 @@ public class LocalMovie
     {
         this.vote_count = in.readInt();
         this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.movie_id = in.readInt();
         this.vote_average = in.readFloat();
         this.popularity = in.readFloat();
         this.video = in.readByte() != 0;
@@ -230,7 +253,7 @@ public class LocalMovie
         this.release_date = in.readString();
     }
 
-    public static final Parcelable.Creator<LocalMovie> CREATOR = new Parcelable.Creator<LocalMovie>()
+    public static final Creator<LocalMovie> CREATOR = new Creator<LocalMovie>()
     {
         @Override
         public LocalMovie createFromParcel(Parcel source)

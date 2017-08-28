@@ -17,11 +17,14 @@ import com.droidapp.ivanelv.eyesmovies.API.ApiConfig;
 import com.droidapp.ivanelv.eyesmovies.API.IEndpoint;
 import com.droidapp.ivanelv.eyesmovies.Adapter.MovieReviewAdapter;
 import com.droidapp.ivanelv.eyesmovies.Adapter.MovieTrailerAdapter;
+import com.droidapp.ivanelv.eyesmovies.Model.LocalMovie;
 import com.droidapp.ivanelv.eyesmovies.Model.Movie;
 import com.droidapp.ivanelv.eyesmovies.Model.MovieReview;
 import com.droidapp.ivanelv.eyesmovies.Model.MovieReviewDetail;
 import com.droidapp.ivanelv.eyesmovies.Model.MovieTrailer;
 import com.droidapp.ivanelv.eyesmovies.Model.MovieTrailerDetail;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -116,10 +119,22 @@ public class MovieDetailActivity extends AppCompatActivity
         // Set Up Review
         rvReview = (RecyclerView) findViewById(R.id.rv_content_review);
         getMovieReview(movieData.getId());
+
+        // Switch FAB Image Resource Depend On Movie Favourite Status
+        if (isFavourite())
+        {
+            fab.setImageResource(R.drawable.ic_favorite_color_24dp);
+        }
+        else
+        {
+            fab.setImageResource(R.drawable.ic_favorite_border_color_24dp);
+        }
     }
 
     public void getMovieTrailer(int id)
     {
+        Log.w("APAID", id + "");
+
         IEndpoint apiService = ApiClient.getClient().create(IEndpoint.class);
 
         Call<MovieTrailer> call = apiService.getMovieTrailer(id, ApiConfig.MyAPIKey);
@@ -187,7 +202,54 @@ public class MovieDetailActivity extends AppCompatActivity
 
     public void markAsFavourite(View v)
     {
-        // Using ContentProvider To Save Data
+        if (!isFavourite())
+        {
+            LocalMovie favMovie = new LocalMovie(
+                    movieData.getVote_count(),
+                    null,
+                    movieData.getId(),
+                    movieData.getVote_average(),
+                    movieData.getPopularity(),
+                    movieData.isVideo(),
+                    movieData.isAdult(),
+                    movieData.getTitle(),
+                    movieData.getPoster_path(),
+                    movieData.getOriginal_language(),
+                    movieData.getOriginal_title(),
+                    movieData.getBackdrop_path(),
+                    movieData.getOverview(),
+                    movieData.getRelease_date()
+            );
+
+            favMovie.save();
+
+            fab.setImageResource(R.drawable.ic_favorite_color_24dp);
+        }
+        else
+        {
+            LocalMovie favMovie =
+                    (LocalMovie) Select.from(LocalMovie.class)
+                            .where(Condition.prop("movieid").eq(movieData.getId()))
+                            .first();
+            favMovie.delete();
+
+            fab.setImageResource(R.drawable.ic_favorite_border_color_24dp);
+        }
+    }
+
+    private boolean isFavourite()
+    {
+        try
+        {
+            return Select.from(LocalMovie.class)
+                    .where(Condition.prop("movieid").eq(movieData.getId()))
+                    .first() != null;
+        }
+        catch (Exception ex)
+        {
+            Log.w("ERROR_IS_FAVOURITE", ex.toString());
+            return false;
+        }
     }
 
     public void openTrailer(View v)

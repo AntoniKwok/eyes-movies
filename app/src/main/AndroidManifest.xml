@@ -21,7 +21,7 @@
         <meta-data android:name="DATABASE" android:value="eyes_movie.db" />
 
         <!-- Version of your database schema. -->
-        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="VERSION" android:value="2" />
 
         <!-- Logs the generated Select queries. -->
         <meta-data android:name="QUERY_LOG" android:value="true" />

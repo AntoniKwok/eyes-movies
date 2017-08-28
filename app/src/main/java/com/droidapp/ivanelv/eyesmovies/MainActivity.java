@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
 
     private Parcelable parcelableData;
 
-    private List<Parcelable> parcelableLocalMovie;
+    private List<LocalMovie> parcelableLocalMovie;
 
     private NetworkChangeReceiver networkChangeReceiver;
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity
             {
                 List<LocalMovie> favMovies = savedInstanceState.getParcelableArrayList("FAV_MOVIE_LIST");
 
-                if (favMovies != null)
+                if (favMovies != null && favMovies.size() > 0)
                     gridView.setAdapter(new MainFavouriteAdapter(MainActivity.this, favMovies));
                 else
                     tvNoView.setVisibility(View.VISIBLE);
@@ -180,13 +180,19 @@ public class MainActivity extends AppCompatActivity
         {
             List<LocalMovie> favMovies = LocalMovie.listAll(LocalMovie.class);
 
-            if (parcelableLocalMovie == null)
-                parcelableLocalMovie = new ArrayList<>();
+            if (favMovies.size() > 0)
+            {
+                if (parcelableLocalMovie == null)
+                    parcelableLocalMovie = favMovies;
 
-            parcelableLocalMovie.addAll(favMovies);
-
-            gridView.setAdapter(new MainFavouriteAdapter(MainActivity.this, favMovies));
-            tvNoView.setVisibility(View.INVISIBLE);
+                gridView.setAdapter(new MainFavouriteAdapter(MainActivity.this, favMovies));
+                tvNoView.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                gridView.setAdapter(null);
+                tvNoView.setVisibility(View.VISIBLE);
+            }
         }
         catch (Exception ex)
         {
