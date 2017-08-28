@@ -1,5 +1,7 @@
 package com.droidapp.ivanelv.eyesmovies;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.droidapp.ivanelv.eyesmovies.API.ApiClient;
 import com.droidapp.ivanelv.eyesmovies.API.ApiConfig;
@@ -110,11 +111,11 @@ public class MovieDetailActivity extends AppCompatActivity
 
         // Set Up Movie Trailer
         rvTrailer = (RecyclerView) findViewById(R.id.rv_trailer);
-        rvTrailer.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         getMovieTrailer(movieData.getId());
 
         // Set Up Review
         rvReview = (RecyclerView) findViewById(R.id.rv_content_review);
+        getMovieReview(movieData.getId());
     }
 
     public void getMovieTrailer(int id)
@@ -127,23 +128,24 @@ public class MovieDetailActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<MovieTrailer> call, Response<MovieTrailer> response)
             {
-                List<MovieTrailerDetail> trailerList = response.body().getResults();
+                if (response.body().getResults() != null)
+                {
+                    List<MovieTrailerDetail> trailerList = response.body().getResults();
 
-                Log.w("TESTETEST", trailerList.toString());
-
-                tAdapter = new MovieTrailerAdapter(MovieDetailActivity.this, trailerList);
-                rvTrailer.setAdapter(tAdapter);
+                    tAdapter = new MovieTrailerAdapter(MovieDetailActivity.this, trailerList);
+                    rvTrailer.setAdapter(tAdapter);
+                    rvTrailer.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                }
             }
 
             @Override
             public void onFailure(Call<MovieTrailer> call, Throwable t)
             {
-                Log.e("ERROR__", t.toString());
+                Log.e("ERROR_TRAILER", t.toString());
             }
         });
     }
 
-    /* TODO Not Done Yet */
     public void getMovieReview(int id)
     {
         IEndpoint apiService = ApiClient.getClient().create(IEndpoint.class);
@@ -154,16 +156,20 @@ public class MovieDetailActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<MovieReview> call, Response<MovieReview> response)
             {
-                List<MovieReviewDetail> reviewList = response.body().getResults();
+                if (response.body().getResults() != null)
+                {
+                    List<MovieReviewDetail> reviewList = response.body().getResults();
 
-                rAdapter = new MovieReviewAdapter();
-                rvTrailer.setAdapter(tAdapter);
+                    rAdapter = new MovieReviewAdapter(MovieDetailActivity.this, reviewList);
+                    rvReview.setAdapter(rAdapter);
+                    rvReview.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.VERTICAL, false));
+                }
             }
 
             @Override
             public void onFailure(Call<MovieReview> call, Throwable t)
             {
-
+                Log.e("ERROR_REVIEW", t.toString());
             }
         });
     }
@@ -183,6 +189,27 @@ public class MovieDetailActivity extends AppCompatActivity
     {
         TextView tvSiteLink = (TextView) v.findViewById(R.id.tv_site_link);
 
-        Toast.makeText(this, tvSiteLink.getText().toString(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(tvSiteLink.getText().toString()));
+
+        Log.w("OPEN_T", intent.toString());
+
+        if (intent.resolveActivity(getPackageManager()) != null)
+        {
+            startActivity(intent);
+        }
+    }
+
+    public void openReview(View v)
+    {
+        TextView tvReviewUrl = (TextView) v.findViewById(R.id.tv_review_url);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(tvReviewUrl.getText().toString()));
+
+        Log.w("OPEN_R", intent.toString());
+
+        if (intent.resolveActivity(getPackageManager()) != null)
+        {
+            startActivity(intent);
+        }
     }
 }

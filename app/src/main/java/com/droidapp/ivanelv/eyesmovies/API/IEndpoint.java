@@ -25,7 +25,7 @@ public interface IEndpoint
     Call<MovieTrailer> getMovieTrailer(@Path("id") int id,
                                        @Query("api_key") String apiKey);
 
-    @GET("movie/{id}/review")
+    @GET("movie/{id}/reviews")
     Call<MovieReview> getMovieReview(@Path("id") int id,
                                      @Query("api_key") String apiKey);
 }

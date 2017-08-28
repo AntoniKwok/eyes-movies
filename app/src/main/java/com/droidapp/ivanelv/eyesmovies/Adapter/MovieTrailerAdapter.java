@@ -1,7 +1,6 @@
 package com.droidapp.ivanelv.eyesmovies.Adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -70,16 +69,13 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     {
         MovieTrailerViewHolder mainViewHolder = (MovieTrailerViewHolder) holder;
 
-        String LINK_YOUTUBE_WATCH = "https://youtube.com/watch";
+        String LINK_YOUTUBE_WATCH = "https://www.youtube.com/watch";
         String KEY_YOUTUBE_MOVIE_TRAILER = movieTrailerList.get(position).getKey();
 
-        Uri uri = new Uri.Builder()
-                .path(LINK_YOUTUBE_WATCH)
-                .appendQueryParameter("v", KEY_YOUTUBE_MOVIE_TRAILER)
-                .build();
+        String PATH_FINAL_MOVIE_TRAILER = LINK_YOUTUBE_WATCH + "?v=" +KEY_YOUTUBE_MOVIE_TRAILER;
 
         mainViewHolder.setTrailerNumber(position + 1);
-        mainViewHolder.setSiteLink(uri.toString());
+        mainViewHolder.setSiteLink(PATH_FINAL_MOVIE_TRAILER);
     }
 
     @Override
