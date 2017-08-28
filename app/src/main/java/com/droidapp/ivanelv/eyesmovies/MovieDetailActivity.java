@@ -185,13 +185,16 @@ public class MovieDetailActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
     }
 
+    public void markAsFavourite(View v)
+    {
+        // Using ContentProvider To Save Data
+    }
+
     public void openTrailer(View v)
     {
         TextView tvSiteLink = (TextView) v.findViewById(R.id.tv_site_link);
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(tvSiteLink.getText().toString()));
-
-        Log.w("OPEN_T", intent.toString());
 
         if (intent.resolveActivity(getPackageManager()) != null)
         {
@@ -204,8 +207,6 @@ public class MovieDetailActivity extends AppCompatActivity
         TextView tvReviewUrl = (TextView) v.findViewById(R.id.tv_review_url);
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(tvReviewUrl.getText().toString()));
-
-        Log.w("OPEN_R", intent.toString());
 
         if (intent.resolveActivity(getPackageManager()) != null)
         {

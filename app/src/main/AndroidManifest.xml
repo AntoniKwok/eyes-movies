@@ -11,7 +11,26 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:replace="android:icon"
+        android:name="com.orm.SugarApp">
+
+        <!-- Sugar ORM Library Meta-Data -->
+        <!-- Name of the generated sqlite database file. eg: app_name.db -->
+        <meta-data android:name="DATABASE" android:value="eyes_movie.db" />
+
+        <!-- Version of your database schema. -->
+        <meta-data android:name="VERSION" android:value="1" />
+
+        <!-- Logs the generated Select queries. -->
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+
+        <!--
+             Specify a package name where your
+             domain/entity classes are present. This helps in smoother table creation.
+        -->
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.droidapp.ivanelv.eyesmovies.Model" />
 
         <receiver
             android:name=".Receiver.NetworkChangeReceiver">
