@@ -51,20 +51,21 @@
                 app:layout_constraintVertical_bias="0.0"/>
 
             <TextView
-                android:id="@+id/iv_movie_detail_title"
+                android:id="@+id/tv_movie_detail_title"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:background="#DD101010"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:paddingEnd="16dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingStart="16dp"
                 android:text="Minions"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_movie_detail_picture"/>
@@ -73,10 +74,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="#DD101010"
-                app:layout_constraintBottom_toBottomOf="@id/tv_movie_detail_release_date"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_movie_detail_release_date"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_movie_detail_title"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_movie_detail_title"/>
 
             <TextView
                 android:id="@+id/tv_movie_detail_release_date"
@@ -97,7 +98,7 @@
                 android:textSize="14sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/guideline"
-                app:layout_constraintTop_toBottomOf="@+id/iv_movie_detail_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_title"
                 />
 
             <TextView
@@ -241,7 +242,7 @@
                 app:layout_constraintTop_toBottomOf="@id/rv_trailer"/>
 
             <TextView
-                android:id="@+id/tv_reviews"
+                android:id="@+id/tv_review"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -249,7 +250,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Sysnopsis"
+                android:text="Review"
                 android:textColor="#313131"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -257,8 +258,8 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/line_separator2"/>
 
-            <TextView
-                android:id="@+id/tv_content_reviews"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_content_review"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -266,12 +267,12 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="tururu"
+                android:text="user reviews"
                 android:textColor="#313131"
                 android:textSize="14sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_reviews"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_review"/>
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </FrameLayout>
