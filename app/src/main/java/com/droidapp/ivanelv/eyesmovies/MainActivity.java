@@ -36,7 +36,19 @@ public class MainActivity extends AppCompatActivity
 {
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private String currentSortMode;
+
+    public String getCurrentSortMode()
+    {
+        return currentSortMode;
+    }
+
     private Toolbar toolbar;
+
+    public GridView getGridView()
+    {
+        return gridView;
+    }
 
     private GridView gridView;
 
@@ -54,6 +66,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         // Set Up Toolbar
@@ -73,34 +86,7 @@ public class MainActivity extends AppCompatActivity
         // Initialize GridView
         gridView = (GridView) findViewById(R.id.grid_view);
 
-        if (savedInstanceState != null)
-        {
-            if (savedInstanceState.getString("SORT_BY").equals(getString(R.string.subtitle_favourite)))
-            {
-                List<LocalMovie> favMovies = savedInstanceState.getParcelableArrayList("FAV_MOVIE_LIST");
-
-                if (favMovies != null && favMovies.size() > 0)
-                    gridView.setAdapter(new MainFavouriteAdapter(MainActivity.this, favMovies));
-                else
-                    tvNoView.setVisibility(View.VISIBLE);
-
-                changeSortBy(savedInstanceState.getString("SORT_BY"));
-                return;
-            }
-
-            if (savedInstanceState.getParcelable("MOVIE_LIST_DATA") != null)
-            {
-                // Now, Parcelable Data Should Be Save The Offline Data
-                parcelableData = savedInstanceState.getParcelable("MOVIE_LIST_DATA");
-
-                MovieResponse movieResponse = savedInstanceState.getParcelable("MOVIE_LIST_DATA");
-                List<Movie> movieList = movieResponse.getResults();
-                gridView.setAdapter(new MainAdapter(MainActivity.this, movieList));
-
-                changeSortBy(savedInstanceState.getString("SORT_BY"));
-            }
-        }
-        else
+        if (savedInstanceState == null)
         {
             // Change ActionBar Subtitle Sorted By Status
             changeSortBy(getString(R.string.subtitle_popularity));
@@ -139,6 +125,8 @@ public class MainActivity extends AppCompatActivity
         });
 
         tvNoView.setVisibility(View.INVISIBLE);
+
+        currentSortMode = getString(R.string.subtitle_top_rated);
     }
 
     public void getPopularMovies()
@@ -170,6 +158,8 @@ public class MainActivity extends AppCompatActivity
         });
 
         tvNoView.setVisibility(View.INVISIBLE);
+
+        currentSortMode = getString(R.string.subtitle_popularity);
     }
 
     public void getFavouriteMovies()
@@ -183,7 +173,9 @@ public class MainActivity extends AppCompatActivity
             if (favMovies.size() > 0)
             {
                 if (parcelableLocalMovie == null)
+                {
                     parcelableLocalMovie = favMovies;
+                }
 
                 gridView.setAdapter(new MainFavouriteAdapter(MainActivity.this, favMovies));
                 tvNoView.setVisibility(View.INVISIBLE);
@@ -199,6 +191,8 @@ public class MainActivity extends AppCompatActivity
             gridView.setAdapter(null);
             tvNoView.setVisibility(View.VISIBLE);
         }
+
+        currentSortMode = getString(R.string.subtitle_favourite);
     }
 
     public void changeSortBy(String sortBy)
@@ -220,9 +214,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStop()
+    protected void onPause()
     {
-        super.onStop();
+        super.onPause();
 
         unregisterReceiver(networkChangeReceiver);
     }
@@ -261,20 +255,55 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-        if (parcelableData != null)
-        {
-            outState.putParcelable("MOVIE_LIST_DATA", parcelableData);
-        }
-
-        if (getSupportActionBar().getSubtitle().equals(getString(R.string.subtitle_favourite)))
+        if (currentSortMode.equals(getString(R.string.subtitle_favourite)))
         {
             outState.putParcelableArrayList(
                     "FAV_MOVIE_LIST",
                     (ArrayList<? extends Parcelable>) parcelableLocalMovie);
+
+            outState.putString("SORT_BY", getString(R.string.subtitle_favourite));
         }
 
-        outState.putString("SORT_BY", getSupportActionBar().getSubtitle().toString());
+        if (parcelableData != null)
+            outState.putParcelable("MOVIE_LIST_DATA", parcelableData);
+
+        outState.putString("SORT_BY", currentSortMode);
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        currentSortMode = savedInstanceState.getString("SORT_BY");
+        changeSortBy(currentSortMode);
+
+        if (currentSortMode.equals(getString(R.string.subtitle_favourite)))
+        {
+            // Re-Initialize The Data For onSaveInstance Usage
+            parcelableLocalMovie = savedInstanceState.getParcelableArrayList("FAV_MOVIE_LIST");
+
+            List<LocalMovie> favMovies = savedInstanceState.getParcelableArrayList("FAV_MOVIE_LIST");
+
+            if (favMovies != null && favMovies.size() > 0)
+            {
+                gridView.setAdapter(new MainFavouriteAdapter(MainActivity.this, favMovies));
+            }
+            else
+            {
+                tvNoView.setVisibility(View.VISIBLE);
+            }
+        }
+        else if (savedInstanceState.getParcelable("MOVIE_LIST_DATA") != null)
+        {
+            // Re-Initialize The Data For onSaveInstance Usage
+            parcelableData = savedInstanceState.getParcelable("MOVIE_LIST_DATA");
+
+            MovieResponse movieResponse = savedInstanceState.getParcelable("MOVIE_LIST_DATA");
+            List<Movie> movieList = movieResponse.getResults();
+            gridView.setAdapter(new MainAdapter(MainActivity.this, movieList));
+        }
+
+        super.onRestoreInstanceState(savedInstanceState);
     }
 }

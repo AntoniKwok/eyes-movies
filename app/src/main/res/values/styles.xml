@@ -13,7 +13,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
-    <!-- Main Toolbar Text Apperance -->
+    <!-- Main Toolbar Text Appearance -->
     <style name="ToolbarTitleAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">#FFFFFFFF</item>

@@ -18,7 +18,9 @@
         android:minWidth="48dp"
         android:layout_gravity="bottom|end"
         android:onClick="markAsFavourite"
-        android:src="@drawable/ic_favorite_border_color_24dp"/>
+        android:src="@drawable/ic_favorite_border_color_24dp"
+        app:backgroundTint="#EEE"
+        app:elevation="5dp"/>
 
     <ScrollView
         android:layout_width="match_parent"

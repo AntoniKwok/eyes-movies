@@ -37,10 +37,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver
                 {
                     connectivityStateWrapper.setVisibility(View.INVISIBLE);
 
-                    if (!((MainActivity) context)
-                            .getSupportActionBar()
-                            .getSubtitle()
-                            .equals(context.getString(R.string.subtitle_favourite)))
+                    if (((MainActivity) context).getGridView().getAdapter() == null
+                        && !((MainActivity) context).getCurrentSortMode().equals(context.getString(R.string.subtitle_favourite)))
                     {
                         ((MainActivity) context).changeSortBy(context.getString(R.string.subtitle_popularity));
                         ((MainActivity) context).getPopularMovies();

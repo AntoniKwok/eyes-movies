@@ -65,52 +65,29 @@ public class MovieDetailActivity extends AppCompatActivity
 
         this.setTitle(getString(R.string.movie_detail_title));
 
+        // Initialize FloatingActionButton
         fab = (FloatingActionButton) findViewById(R.id.btn_fav);
 
-        if (savedInstanceState != null)
-        {
-            // When Screen Rotate, Load From Saved Instance State
-            movieData = savedInstanceState.getParcelable("MOVIE_DATA");
-        }
-        else
-        {
-            // When Intent Started, Load From Intent Parcelable Data
-            movieData = getIntent().getParcelableExtra("MOVIE_DATA");
-        }
+        // When Intent Started, Load From Intent Parcelable Data
+        movieData = getIntent().getParcelableExtra("MOVIE_DATA");
 
         // Set Up Image
         ivMovieDetail = (ImageView) findViewById(R.id.iv_movie_detail_picture);
-        Picasso
-                .with(this)
-                .load(PATH_IMAGE_MOBILE_SIZE + movieData.getBackdrop_path())
-                .placeholder(R.drawable.iv_placeholder)
-                .fit()
-                .into(ivMovieDetail);
 
         // Set Up Movie Detail Title
         tvTitle = (TextView) findViewById(R.id.tv_movie_detail_title);
-        tvTitle.setText(movieData.getTitle());
 
         // Set Up Movie Detail Release Date
         tvReleaseDate = (TextView) findViewById(R.id.tv_movie_detail_release_date);
-        tvReleaseDate.setText(movieData.getRelease_date());
 
-        // Initialize Formatter The Float Number of Popularity and Rating
-        DecimalFormat decimalFormat = new DecimalFormat("#.#");
-
-        // Set Up The Movie Popularity
-        String formattedPopularity = decimalFormat.format(movieData.getPopularity());
+        // Set Up Text View Popularity
         tvPopularity = (TextView) findViewById(R.id.tv_movie_detail_popularity);
-        tvPopularity.setText(formattedPopularity);
 
         // Set Up The Movie Rating
-        String formattedRating = decimalFormat.format(movieData.getVote_average());
         tvRating = (TextView) findViewById(R.id.tv_movie_detail_top_rated);
-        tvRating.setText(formattedRating);
 
         // Set Up Movie Synopsis Content
         tvSynopsisContent = (TextView) findViewById(R.id.tv_content_synopsis);
-        tvSynopsisContent.setText(movieData.getOverview());
 
         // Set Up Movie Trailer
         rvTrailer = (RecyclerView) findViewById(R.id.rv_trailer);
@@ -133,8 +110,6 @@ public class MovieDetailActivity extends AppCompatActivity
 
     public void getMovieTrailer(int id)
     {
-        Log.w("APAID", id + "");
-
         IEndpoint apiService = ApiClient.getClient().create(IEndpoint.class);
 
         Call<MovieTrailer> call = apiService.getMovieTrailer(id, ApiConfig.MyAPIKey);
@@ -198,6 +173,45 @@ public class MovieDetailActivity extends AppCompatActivity
         }
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        movieData = savedInstanceState.getParcelable("MOVIE_DATA");
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        // Image Load Logic
+
+        Picasso
+                .with(this)
+                .load(PATH_IMAGE_MOBILE_SIZE + movieData.getBackdrop_path())
+                .placeholder(R.drawable.iv_placeholder)
+                .fit()
+                .into(ivMovieDetail);
+
+        tvTitle.setText(movieData.getTitle());
+
+        tvReleaseDate.setText(movieData.getRelease_date());
+
+        // Initialize Formatter The Float Number of Popularity and Rating
+        DecimalFormat decimalFormat = new DecimalFormat("#.#");
+
+        // Set Up The Movie Popularity
+        String formattedPopularity = decimalFormat.format(movieData.getPopularity());
+        tvPopularity.setText(formattedPopularity);
+
+        // Set Up The Movie Rating
+        String formattedRating = decimalFormat.format(movieData.getVote_average());
+        tvRating.setText(formattedRating);
+        tvSynopsisContent.setText(movieData.getOverview());
     }
 
     public void markAsFavourite(View v)
