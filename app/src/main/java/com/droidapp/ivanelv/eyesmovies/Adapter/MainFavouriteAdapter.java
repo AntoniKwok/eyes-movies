@@ -174,7 +174,7 @@ public class MainFavouriteAdapter extends BaseAdapter
         Retrofit retrofitImage = new ApiClient().getImageClient();
         IEndpoint apiService = retrofitImage.create(IEndpoint.class);
 
-        Call<ResponseBody> call = apiService.getBackdropImage(movies.get(position).getPoster_path());
+        Call<ResponseBody> call = apiService.getPosterImage(movies.get(position).getPoster_path());
         call.enqueue(new retrofit2.Callback<ResponseBody>()
         {
             @Override

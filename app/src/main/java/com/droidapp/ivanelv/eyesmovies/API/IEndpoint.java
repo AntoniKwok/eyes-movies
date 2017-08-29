@@ -30,8 +30,13 @@ public interface IEndpoint
     Call<MovieReview> getMovieReview(@Path("id") int id,
                                      @Query("api_key") String apiKey);
 
-    @GET(Contract.SIZE_MOBILE + "{backdropPath}")
+    @GET(Contract.SIZE_MOBILE + "{posterImagePath}")
+    Call<ResponseBody> getPosterImage(
+            @Path(value = "posterImagePath", encoded = true)
+            String posterImagePath);
+
+    @GET("w780{backdropImagePath}")
     Call<ResponseBody> getBackdropImage(
-            @Path(value = "backdropPath", encoded = true)
-            String backdropPath);
+            @Path(value = "backdropImagePath", encoded = true)
+                    String backdropImagePath);
 }

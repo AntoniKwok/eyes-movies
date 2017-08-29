@@ -27,14 +27,21 @@ import com.orm.query.Condition;
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
-import static com.droidapp.ivanelv.eyesmovies.API.Contract.PATH_IMAGE_ORIGINAL_SIZE;
+import static com.droidapp.ivanelv.eyesmovies.API.Contract.PATH_IMAGE_780_SIZE;
 
 public class MovieDetailActivity extends AppCompatActivity
 {
@@ -189,13 +196,40 @@ public class MovieDetailActivity extends AppCompatActivity
         super.onResume();
 
         // Image Load Logic
+        String favMoviesBackdropImagePath = this.getFilesDir() + movieData.getBackdrop_path();
+        File backdropImage = new File(favMoviesBackdropImagePath);
 
-        Picasso
-                .with(this)
-                .load(PATH_IMAGE_ORIGINAL_SIZE + movieData.getBackdrop_path())
-                .placeholder(R.drawable.iv_placeholder)
-                .fit()
-                .into(ivMovieDetail);
+        if (backdropImage.exists())
+        {
+            Picasso
+                    .with(this)
+                    .load(backdropImage)
+                    .placeholder(R.drawable.iv_placeholder)
+                    .fit()
+                    .into(ivMovieDetail);
+        }
+        else if (!backdropImage.exists())
+        {
+            Picasso
+                    .with(this)
+                    .load(PATH_IMAGE_780_SIZE + movieData.getBackdrop_path())
+                    .placeholder(R.drawable.iv_placeholder)
+                    .fit()
+                    .into(ivMovieDetail, new com.squareup.picasso.Callback()
+                    {
+                        @Override
+                        public void onSuccess()
+                        {
+                            downloadImage();
+                        }
+
+                        @Override
+                        public void onError()
+                        {
+
+                        }
+                    });
+        }
 
         tvTitle.setText(movieData.getTitle());
 
@@ -288,5 +322,73 @@ public class MovieDetailActivity extends AppCompatActivity
         {
             startActivity(intent);
         }
+    }
+
+    private void downloadImage()
+    {
+        Retrofit retrofitImage = new ApiClient().getImageClient();
+        IEndpoint apiService = retrofitImage.create(IEndpoint.class);
+
+        Call<ResponseBody> call = apiService.getBackdropImage(movieData.getBackdrop_path());
+        call.enqueue(new retrofit2.Callback<ResponseBody>()
+        {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response)
+            {
+                InputStream is = null;
+                FileOutputStream fos = null;
+
+                try
+                {
+                    is = response.body().byteStream();
+                    fos = new FileOutputStream(getApplicationContext().getFilesDir() + movieData.getBackdrop_path());
+                    int c;
+
+                    while ((c = is.read()) != -1)
+                    {
+                        fos.write(c);
+                    }
+                }
+                catch (FileNotFoundException e)
+                {
+                    Log.w("__ERRROR__", e.toString());
+                }
+                catch (IOException e)
+                {
+                    Log.w("__ERRROR__", e.toString());
+                }
+                finally
+                {
+                    if (is != null)
+                    {
+                        try
+                        {
+                            is.close();
+                        }
+                        catch (IOException e)
+                        {
+                            Log.w("__ERRROR__", e.toString());
+                        }
+                    }
+                    if (fos != null)
+                    {
+                        try
+                        {
+                            fos.close();
+                        }
+                        catch (IOException e)
+                        {
+                            Log.w("__ERRROR__", e.toString());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t)
+            {
+
+            }
+        });
     }
 }

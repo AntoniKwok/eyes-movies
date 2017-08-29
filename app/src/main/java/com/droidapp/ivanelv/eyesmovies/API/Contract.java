@@ -17,7 +17,7 @@ public class Contract
      */
     public static final String PATH_IMAGE_MOBILE_SIZE = PATH_IMAGE_BASE + SIZE_MOBILE;
 
-    public static final String PATH_IMAGE_ORIGINAL_SIZE = PATH_IMAGE_BASE + "original";
+    public static final String PATH_IMAGE_780_SIZE = PATH_IMAGE_BASE + "w780";
 
     public static final String PATH_POPULAR_MOVIE = "movie/popular";
     public static final String PATH_TOP_RATED_MOVIE = "movie/top_rated";
