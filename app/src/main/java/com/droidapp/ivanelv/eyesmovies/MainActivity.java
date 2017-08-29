@@ -96,39 +96,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void getTopRatedMovies()
-    {
-        progressBar.setVisibility(View.VISIBLE);
-        gridView.setAdapter(null);
-
-        IEndpoint apiService = ApiClient.getClient().create(IEndpoint.class);
-
-        Call<MovieResponse> call = apiService.getTopRatedMovies(ApiConfig.MyAPIKey);
-        call.enqueue(new Callback<MovieResponse>()
-        {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response)
-            {
-                parcelableData = response.body();
-
-                List<Movie> listMovies = response.body().getResults();
-                gridView.setAdapter(new MainAdapter(MainActivity.this, listMovies));
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t)
-            {
-                Log.e(TAG, t.toString());
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        tvNoView.setVisibility(View.INVISIBLE);
-
-        currentSortMode = getString(R.string.subtitle_top_rated);
-    }
-
     public void getPopularMovies()
     {
         progressBar.setVisibility(View.VISIBLE);
@@ -160,6 +127,39 @@ public class MainActivity extends AppCompatActivity
         tvNoView.setVisibility(View.INVISIBLE);
 
         currentSortMode = getString(R.string.subtitle_popularity);
+    }
+
+    public void getTopRatedMovies()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        gridView.setAdapter(null);
+
+        IEndpoint apiService = ApiClient.getClient().create(IEndpoint.class);
+
+        Call<MovieResponse> call = apiService.getTopRatedMovies(ApiConfig.MyAPIKey);
+        call.enqueue(new Callback<MovieResponse>()
+        {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response)
+            {
+                parcelableData = response.body();
+
+                List<Movie> listMovies = response.body().getResults();
+                gridView.setAdapter(new MainAdapter(MainActivity.this, listMovies));
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t)
+            {
+                Log.e(TAG, t.toString());
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        tvNoView.setVisibility(View.INVISIBLE);
+
+        currentSortMode = getString(R.string.subtitle_top_rated);
     }
 
     public void getFavouriteMovies()

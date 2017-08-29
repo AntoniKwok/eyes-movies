@@ -34,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.droidapp.ivanelv.eyesmovies.API.Contract.PATH_IMAGE_MOBILE_SIZE;
+import static com.droidapp.ivanelv.eyesmovies.API.Contract.PATH_IMAGE_ORIGINAL_SIZE;
 
 public class MovieDetailActivity extends AppCompatActivity
 {
@@ -192,7 +192,7 @@ public class MovieDetailActivity extends AppCompatActivity
 
         Picasso
                 .with(this)
-                .load(PATH_IMAGE_MOBILE_SIZE + movieData.getBackdrop_path())
+                .load(PATH_IMAGE_ORIGINAL_SIZE + movieData.getBackdrop_path())
                 .placeholder(R.drawable.iv_placeholder)
                 .fit()
                 .into(ivMovieDetail);

@@ -3,6 +3,7 @@ package com.droidapp.ivanelv.eyesmovies.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +11,28 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.droidapp.ivanelv.eyesmovies.API.ApiClient;
+import com.droidapp.ivanelv.eyesmovies.API.IEndpoint;
 import com.droidapp.ivanelv.eyesmovies.Model.LocalMovie;
 import com.droidapp.ivanelv.eyesmovies.Model.Movie;
 import com.droidapp.ivanelv.eyesmovies.MovieDetailActivity;
 import com.droidapp.ivanelv.eyesmovies.R;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static com.droidapp.ivanelv.eyesmovies.API.Contract.PATH_IMAGE_MOBILE_SIZE;
 
@@ -67,12 +81,40 @@ public class MainFavouriteAdapter extends BaseAdapter
         // Set Up The Movie Image
         final ImageView ivMovie = (ImageView) convertView.findViewById(R.id.iv_movie);
 
-        Picasso
-                .with(mContext)
-                .load(PATH_IMAGE_MOBILE_SIZE + movies.get(position).getPoster_path())
-                .placeholder(R.drawable.iv_placeholder)
-                .fit()
-                .into(ivMovie);
+        String favMoviesPosterImagePath = mContext.getFilesDir() + movies.get(position).getPoster_path();
+        File posterImage = new File(favMoviesPosterImagePath);
+
+        if (posterImage.exists())
+        {
+            Picasso
+                    .with(mContext)
+                    .load(posterImage)
+                    .placeholder(R.drawable.iv_placeholder)
+                    .fit()
+                    .into(ivMovie);
+        }
+        else
+        {
+            Picasso
+                    .with(mContext)
+                    .load(PATH_IMAGE_MOBILE_SIZE + movies.get(position).getPoster_path())
+                    .placeholder(R.drawable.iv_placeholder)
+                    .fit()
+                    .into(ivMovie, new Callback()
+                    {
+                        @Override
+                        public void onSuccess()
+                        {
+                            downloadImage(position);
+                        }
+
+                        @Override
+                        public void onError()
+                        {
+
+                        }
+                    });
+        }
 
         // Set Up The Movie Title
         TextView tvTitle = (TextView) convertView.findViewById(R.id.tv_movie_title);
@@ -125,5 +167,73 @@ public class MainFavouriteAdapter extends BaseAdapter
         });
 
         return convertView;
+    }
+
+    private void downloadImage(final int position)
+    {
+        Retrofit retrofitImage = new ApiClient().getImageClient();
+        IEndpoint apiService = retrofitImage.create(IEndpoint.class);
+
+        Call<ResponseBody> call = apiService.getBackdropImage(movies.get(position).getPoster_path());
+        call.enqueue(new retrofit2.Callback<ResponseBody>()
+        {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response)
+            {
+                InputStream is = null;
+                FileOutputStream fos = null;
+
+                try
+                {
+                    is = response.body().byteStream();
+                    fos = new FileOutputStream(mContext.getFilesDir() + movies.get(position).getPoster_path());
+                    int c;
+
+                    while ((c = is.read()) != -1)
+                    {
+                        fos.write(c);
+                    }
+                }
+                catch (FileNotFoundException e)
+                {
+                    Log.w("__ERRROR__", e.toString());
+                }
+                catch (IOException e)
+                {
+                    Log.w("__ERRROR__", e.toString());
+                }
+                finally
+                {
+                    if (is != null)
+                    {
+                        try
+                        {
+                            is.close();
+                        }
+                        catch (IOException e)
+                        {
+                            Log.w("__ERRROR__", e.toString());
+                        }
+                    }
+                    if (fos != null)
+                    {
+                        try
+                        {
+                            fos.close();
+                        }
+                        catch (IOException e)
+                        {
+                            Log.w("__ERRROR__", e.toString());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t)
+            {
+
+            }
+        });
     }
 }

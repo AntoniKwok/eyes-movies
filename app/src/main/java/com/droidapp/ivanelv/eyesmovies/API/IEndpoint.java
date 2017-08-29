@@ -4,6 +4,7 @@ import com.droidapp.ivanelv.eyesmovies.Model.MovieResponse;
 import com.droidapp.ivanelv.eyesmovies.Model.MovieReview;
 import com.droidapp.ivanelv.eyesmovies.Model.MovieTrailer;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -28,4 +29,9 @@ public interface IEndpoint
     @GET("movie/{id}/reviews")
     Call<MovieReview> getMovieReview(@Path("id") int id,
                                      @Query("api_key") String apiKey);
+
+    @GET(Contract.SIZE_MOBILE + "{backdropPath}")
+    Call<ResponseBody> getBackdropImage(
+            @Path(value = "backdropPath", encoded = true)
+            String backdropPath);
 }
