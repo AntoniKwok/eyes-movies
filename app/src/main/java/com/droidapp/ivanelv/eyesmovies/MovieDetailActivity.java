@@ -1,6 +1,8 @@
 package com.droidapp.ivanelv.eyesmovies;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +25,7 @@ import com.droidapp.ivanelv.eyesmovies.Model.MovieReview;
 import com.droidapp.ivanelv.eyesmovies.Model.MovieReviewDetail;
 import com.droidapp.ivanelv.eyesmovies.Model.MovieTrailer;
 import com.droidapp.ivanelv.eyesmovies.Model.MovieTrailerDetail;
+import com.droidapp.ivanelv.eyesmovies.Receiver.NetworkChangeReceiver;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 import com.squareup.picasso.Picasso;
@@ -45,7 +48,14 @@ import static com.droidapp.ivanelv.eyesmovies.API.Contract.PATH_IMAGE_780_SIZE;
 
 public class MovieDetailActivity extends AppCompatActivity
 {
+    private NetworkChangeReceiver networkChangeReceiver;
+
     private Movie movieData;
+
+    public Movie getMovieData()
+    {
+        return movieData;
+    }
 
     private ImageView ivMovieDetail;
 
@@ -57,6 +67,16 @@ public class MovieDetailActivity extends AppCompatActivity
                 tvSynopsisContent;
 
     private RecyclerView rvTrailer, rvReview;
+
+    public RecyclerView getRvTrailer()
+    {
+        return rvTrailer;
+    }
+
+    public RecyclerView getRvReview()
+    {
+        return rvReview;
+    }
 
     private MovieTrailerAdapter tAdapter;
 
@@ -71,6 +91,9 @@ public class MovieDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_movie_detail);
 
         this.setTitle(getString(R.string.movie_detail_title));
+
+        // Initialize Connectivity Manager
+        networkChangeReceiver = new NetworkChangeReceiver();
 
         // Initialize FloatingActionButton
         fab = (FloatingActionButton) findViewById(R.id.btn_fav);
@@ -139,6 +162,8 @@ public class MovieDetailActivity extends AppCompatActivity
             public void onFailure(Call<MovieTrailer> call, Throwable t)
             {
                 Log.e("ERROR_TRAILER", t.toString());
+                rvTrailer.setAdapter(new MovieTrailerAdapter(MovieDetailActivity.this, null));
+                rvTrailer.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
             }
         });
     }
@@ -167,6 +192,8 @@ public class MovieDetailActivity extends AppCompatActivity
             public void onFailure(Call<MovieReview> call, Throwable t)
             {
                 Log.e("ERROR_REVIEW", t.toString());
+                rvReview.setAdapter(new MovieReviewAdapter(MovieDetailActivity.this, null));
+                rvReview.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.VERTICAL, false));
             }
         });
     }
@@ -191,9 +218,21 @@ public class MovieDetailActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        unregisterReceiver(networkChangeReceiver);
+    }
+
+    @Override
     protected void onResume()
     {
         super.onResume();
+
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        intentFilter.addAction(Intent.ACTION_MANAGE_NETWORK_USAGE);
+        this.registerReceiver(networkChangeReceiver, intentFilter);
 
         // Image Load Logic
         String favMoviesBackdropImagePath = this.getFilesDir() + movieData.getBackdrop_path();

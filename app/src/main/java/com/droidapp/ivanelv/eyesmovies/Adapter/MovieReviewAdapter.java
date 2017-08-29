@@ -60,6 +60,23 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    public static class NoMovieViewHolder extends BaseHolder
+    {
+        private TextView tv;
+
+        public NoMovieViewHolder(ViewGroup parent, int itemCount)
+        {
+            super(R.layout.content_offline_movie_detail, parent);
+
+            tv = (TextView) itemView.findViewById(R.id.tv_state);
+
+            if (itemCount == 0)
+            {
+                tv.setText("There's no trailer for this movie.");
+            }
+        }
+    }
+
     public MovieReviewAdapter(Context mContext, List<MovieReviewDetail> reviewList)
     {
         this.mContext = mContext;
@@ -69,7 +86,14 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        return new MovieReviewViewHolder(parent);
+        if (reviewList != null && getItemCount() > 0)
+        {
+            return new MovieReviewViewHolder(parent);
+        }
+        else
+        {
+            return new NoMovieViewHolder(parent, getItemCount());
+        }
     }
 
     @Override
@@ -85,6 +109,6 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemCount()
     {
-        return reviewList.size();
+        return reviewList == null ? 0 : reviewList.size();
     }
 }

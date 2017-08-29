@@ -6,10 +6,15 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.droidapp.ivanelv.eyesmovies.Adapter.MovieReviewAdapter;
+import com.droidapp.ivanelv.eyesmovies.Adapter.MovieTrailerAdapter;
 import com.droidapp.ivanelv.eyesmovies.MainActivity;
+import com.droidapp.ivanelv.eyesmovies.MovieDetailActivity;
 import com.droidapp.ivanelv.eyesmovies.R;
 
 /**
@@ -47,6 +52,26 @@ public class NetworkChangeReceiver extends BroadcastReceiver
                 else
                 {
                     connectivityStateWrapper.setVisibility(View.VISIBLE);
+                }
+            }
+            else if (context instanceof MovieDetailActivity)
+            {
+                MovieDetailActivity movieDetailActivity = (MovieDetailActivity) context;
+                RecyclerView rvReview = movieDetailActivity.getRvReview();
+                RecyclerView rvTrailer = movieDetailActivity.getRvTrailer();
+
+                if (netInfo != null && netInfo.isConnectedOrConnecting())
+                {
+                    movieDetailActivity.getMovieTrailer(movieDetailActivity.getMovieData().getId());
+                    movieDetailActivity.getMovieReview(movieDetailActivity.getMovieData().getId());
+                }
+                else
+                {
+                    rvTrailer.setAdapter(new MovieTrailerAdapter(movieDetailActivity, null));
+                    rvTrailer.setLayoutManager(new LinearLayoutManager(movieDetailActivity, LinearLayoutManager.HORIZONTAL, false));
+
+                    rvReview.setAdapter(new MovieReviewAdapter(movieDetailActivity, null));
+                    rvReview.setLayoutManager(new LinearLayoutManager(movieDetailActivity, LinearLayoutManager.VERTICAL, false));
                 }
             }
         }

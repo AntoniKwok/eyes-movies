@@ -15,4 +15,5 @@
 
     <!-- MovieDetailActivity -->
     <string name="movie_detail_title">Movie Detail</string>
+    <string name="movie_detail_offline_mode">You\'re in offline mode. Trailer and Review will automatically fetch when you have internet connection.</string>
 </resources>
