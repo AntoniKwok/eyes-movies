@@ -64,7 +64,9 @@ public class MovieDetailActivity extends AppCompatActivity
                 tvReleaseDate,
                 tvPopularity,
                 tvRating,
-                tvSynopsisContent;
+                tvSynopsisContent,
+                tvStateTrailer,
+                tvStateReview;
 
     private RecyclerView rvTrailer, rvReview;
 
@@ -127,6 +129,10 @@ public class MovieDetailActivity extends AppCompatActivity
         rvReview = (RecyclerView) findViewById(R.id.rv_content_review);
         getMovieReview(movieData.getId());
 
+        tvStateTrailer = (TextView) findViewById(R.id.tv_state1);
+
+        tvStateReview = (TextView) findViewById(R.id.tv_state2);
+
         // Switch FAB Image Resource Depend On Movie Favourite Status
         if (isFavourite())
         {
@@ -153,8 +159,19 @@ public class MovieDetailActivity extends AppCompatActivity
                     List<MovieTrailerDetail> trailerList = response.body().getResults();
 
                     tAdapter = new MovieTrailerAdapter(MovieDetailActivity.this, trailerList);
-                    rvTrailer.setAdapter(tAdapter);
-                    rvTrailer.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
+
+                    if (tAdapter.getItemCount() > 0)
+                    {
+                        rvTrailer.setAdapter(tAdapter);
+                        rvTrailer.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
+
+                        tvStateTrailer.setVisibility(View.INVISIBLE);
+                    }
+                    else
+                    {
+                        tvStateTrailer.setText("There're no trailer for this movie.");
+                        tvStateTrailer.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
@@ -162,8 +179,7 @@ public class MovieDetailActivity extends AppCompatActivity
             public void onFailure(Call<MovieTrailer> call, Throwable t)
             {
                 Log.e("ERROR_TRAILER", t.toString());
-                rvTrailer.setAdapter(new MovieTrailerAdapter(MovieDetailActivity.this, null));
-                rvTrailer.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                tvStateTrailer.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -183,8 +199,19 @@ public class MovieDetailActivity extends AppCompatActivity
                     List<MovieReviewDetail> reviewList = response.body().getResults();
 
                     rAdapter = new MovieReviewAdapter(MovieDetailActivity.this, reviewList);
-                    rvReview.setAdapter(rAdapter);
-                    rvReview.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.VERTICAL, false));
+
+                    if (rAdapter.getItemCount() > 0)
+                    {
+                        rvReview.setAdapter(rAdapter);
+                        rvReview.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.VERTICAL, false));
+
+                        tvStateReview.setVisibility(View.INVISIBLE);
+                    }
+                    else
+                    {
+                        tvStateReview.setText("There're no review for this movie.");
+                        tvStateReview.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
@@ -192,8 +219,7 @@ public class MovieDetailActivity extends AppCompatActivity
             public void onFailure(Call<MovieReview> call, Throwable t)
             {
                 Log.e("ERROR_REVIEW", t.toString());
-                rvReview.setAdapter(new MovieReviewAdapter(MovieDetailActivity.this, null));
-                rvReview.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.VERTICAL, false));
+                tvStateReview.setVisibility(View.VISIBLE);
             }
         });
     }

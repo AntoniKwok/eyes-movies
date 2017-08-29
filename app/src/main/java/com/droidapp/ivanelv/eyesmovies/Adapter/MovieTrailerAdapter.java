@@ -53,23 +53,6 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void setTrailerNumber(int number) { tvTrailerNumber.setText("Trailer " + number); }
     }
 
-    public static class NoMovieViewHolder extends BaseHolder
-    {
-        private TextView tv;
-
-        public NoMovieViewHolder(ViewGroup parent, int itemCount)
-        {
-            super(R.layout.content_offline_movie_detail, parent);
-
-            tv = (TextView) itemView.findViewById(R.id.tv_state);
-
-            if (itemCount == 0)
-            {
-                tv.setText("There's no trailer for this movie.");
-            }
-        }
-    }
-
     public MovieTrailerAdapter(Context context, List<MovieTrailerDetail> movieTrailers)
     {
         this.mContext = context;
@@ -78,28 +61,21 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        if (movieTrailerList != null && getItemCount() > 0)
-        {
-            return new MovieTrailerViewHolder(parent);
-        }
-        else
-        {
-            return new NoMovieViewHolder(parent, getItemCount());
-        }
+        return new MovieTrailerViewHolder(parent);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-            MovieTrailerViewHolder mainViewHolder = (MovieTrailerViewHolder) holder;
+        MovieTrailerViewHolder mainViewHolder = (MovieTrailerViewHolder) holder;
 
-            String LINK_YOUTUBE_WATCH = "https://www.youtube.com/watch";
-            String KEY_YOUTUBE_MOVIE_TRAILER = movieTrailerList.get(position).getKey();
+        String LINK_YOUTUBE_WATCH = "https://www.youtube.com/watch";
+        String KEY_YOUTUBE_MOVIE_TRAILER = movieTrailerList.get(position).getKey();
 
-            String PATH_FINAL_MOVIE_TRAILER = LINK_YOUTUBE_WATCH + "?v=" +KEY_YOUTUBE_MOVIE_TRAILER;
+        String PATH_FINAL_MOVIE_TRAILER = LINK_YOUTUBE_WATCH + "?v=" +KEY_YOUTUBE_MOVIE_TRAILER;
 
-            mainViewHolder.setTrailerNumber(position + 1);
-            mainViewHolder.setSiteLink(PATH_FINAL_MOVIE_TRAILER);
+        mainViewHolder.setTrailerNumber(position + 1);
+        mainViewHolder.setSiteLink(PATH_FINAL_MOVIE_TRAILER);
     }
 
     @Override

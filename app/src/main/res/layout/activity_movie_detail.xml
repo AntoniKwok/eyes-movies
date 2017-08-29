@@ -11,12 +11,12 @@
         android:id="@+id/btn_fav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:minHeight="48dp"
         android:minWidth="48dp"
-        android:layout_gravity="bottom|end"
         android:onClick="markAsFavourite"
         android:src="@drawable/ic_favorite_border_color_24dp"
         app:backgroundTint="#EEE"
@@ -178,9 +178,9 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:lineSpacingExtra="5dp"
                 android:textColor="#313131"
                 android:textSize="14sp"
-                android:lineSpacingExtra="5dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_title_synopsis"/>
@@ -190,11 +190,11 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:background="#DEDEDE"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -217,34 +217,54 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/line_separator"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_trailer"
-                android:layout_width="0dp"
+            <FrameLayout
+                android:id="@+id/trailer_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_trailer"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_trailer">
+
+                <TextView
+                    android:id="@+id/tv_state1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/movie_detail_offline_mode"
+                    android:textColor="#313131"
+                    android:textSize="14sp"
+                    android:textStyle="italic"
+                    android:visibility="invisible"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_trailer"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_trailer"/>
+            </FrameLayout>
 
             <View
                 android:id="@+id/line_separator2"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:background="#DEDEDE"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_trailer"/>
+                app:layout_constraintTop_toBottomOf="@id/trailer_wrapper"/>
 
             <TextView
                 android:id="@+id/tv_review"
@@ -270,6 +290,24 @@
                 android:text="user reviews"
                 android:textColor="#313131"
                 android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_review"/>
+
+            <TextView
+                android:id="@+id/tv_state2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/movie_detail_offline_mode"
+                android:textColor="#313131"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:visibility="invisible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_review"/>
