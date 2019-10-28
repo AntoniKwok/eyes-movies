@@ -28,12 +28,23 @@ import com.droidapp.ivanelv.eyesmovies.Receiver.NetworkChangeReceiver;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
 {
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+
+    @BindView(R.id.tv_no_views)
+    TextView tvNoView;
+
+    @BindView(R.id.grid_view)
+    GridView gridView;
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private String currentSortMode;
@@ -50,17 +61,13 @@ public class MainActivity extends AppCompatActivity
         return gridView;
     }
 
-    private GridView gridView;
-
     private Parcelable parcelableData;
 
     private List<LocalMovie> parcelableLocalMovie;
 
     private NetworkChangeReceiver networkChangeReceiver;
 
-    private ProgressBar progressBar;
 
-    private TextView tvNoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,14 +84,7 @@ public class MainActivity extends AppCompatActivity
         // Initialize Connectivity Manager
         networkChangeReceiver = new NetworkChangeReceiver();
 
-        // Set Up Progress Bar
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-
-        // Set Up No View Text
-        tvNoView = (TextView) findViewById(R.id.tv_no_views);
-
-        // Initialize GridView
-        gridView = (GridView) findViewById(R.id.grid_view);
+        ButterKnife.bind(this);
 
         if (savedInstanceState == null)
         {
